@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Inventory App</string>
+
+    <string name="error_empty">No Product Found. \nPress "+" button at the right bottom corner of the screen to add product</string>
+    <string name="edit_product_name">Name</string>
+    <string name="edit_product_price">Price</string>
+    <string name="edit_product_qty">Quantity</string>
+    <string name="edit_product_image">Image</string>
+
+    <string name="menu_done">Done</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_edit">Edit</string>
+    <string name="detail_product_order"><u>Order More</u></string>
+    <string name="detail_product_sale">Sale</string>
+    <string name="detail_product_receive">Receive</string>
 </resources>
