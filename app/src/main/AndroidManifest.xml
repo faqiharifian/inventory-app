@@ -21,6 +21,11 @@
         </activity>
         <activity android:name=".EditActivity"/>
         <activity android:name=".DetailActivity"></activity>
+
+        <provider
+            android:authorities="com.arifian.udacity.inventoryapp"
+            android:name=".data.InventoryProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

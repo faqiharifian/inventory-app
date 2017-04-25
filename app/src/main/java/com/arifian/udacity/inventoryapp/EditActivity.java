@@ -95,15 +95,6 @@ public class EditActivity extends AppCompatActivity {
                             Intent.createChooser(intent, "Select"),
                             FILE_SELECT_CODE);
                 } catch (android.content.ActivityNotFoundException ex) {
-                    // Potentially direct the user to the Market with a Dialog
-//                    showAlert("Aplikasi Tidak Ditemukan", "Silahkan install file manager terlebih dahulu.", "OK", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            Intent intent = new Intent(Intent.ACTION_VIEW);
-//                            intent.setData(Uri.parse("market://search?q=file%20manager&c=apps"));
-//                            startActivity(intent);
-//                        }
-//                    });
                     Toast.makeText(EditActivity.this, "Please install a File Manager.",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -158,8 +149,7 @@ public class EditActivity extends AppCompatActivity {
                     if(!Arrays.asList(mimeTypes).contains(FileUtil.getType(this, attachmentUri))){
                         imageTextView.setText("");
                         imageBytes = imageBytesBefore;
-
-//                        showAlert("Gagal", "Silakan pilih file .xls .xlsx .doc .docx .pdf.", "OK", null);
+                        Toast.makeText(EditActivity.this, "Please select .jpg, .jpeg, .png file", Toast.LENGTH_LONG).show();
                     }else{
                         imageTextView.setText(attachment.getName());
                         imageBytes = FileUtil.toByteArray(attachment);

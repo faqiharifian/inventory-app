@@ -1,4 +1,5 @@
 <resources>
+    <string name="authority">com.arifian.udacity.inventoryapp</string>
     <string name="app_name">Inventory App</string>
 
     <string name="error_empty">No Product Found. \nPress "+" button at the right bottom corner of the screen to add product</string>
@@ -22,4 +23,5 @@
     <string name="dialog_discard_message">Are you sure want to discard changes on this product?</string>
 
     <string name="order_more_message">Hello Sir. \nMay I order product named %s [quantity] more? \nPlease reply as soon as possible.\nThankyou very much.</string>
+    <string name="product_left">left</string>
 </resources>
