@@ -11,6 +11,12 @@
     <string name="menu_delete">Delete</string>
     <string name="menu_edit">Edit</string>
     <string name="detail_product_order"><u>Order More</u></string>
-    <string name="detail_product_sale">Sale</string>
-    <string name="detail_product_receive">Receive</string>
+    <string name="detail_product_sale">SALE</string>
+    <string name="detail_product_receive">RECEIVE</string>
+
+    <string name="dialog_positive">OK</string>
+    <string name="dialog_negative">Cancel</string>
+    <string name="dialog_message">Are you sure want to delete this product?</string>
+
+    <string name="order_more_message">Hello Sir. \nMay I order product named %s [quantity] more? \nPlease reply as soon as possible.\nThankyou very much.</string>
 </resources>

@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="color_disable">#9e9e9e</color>
+    <color name="color_sale">#ef5350</color>
+    <color name="color_receive">#66bb6a</color>
+
+    <color name="color_btn_increase_decrease">#af000000</color>
 </resources>
