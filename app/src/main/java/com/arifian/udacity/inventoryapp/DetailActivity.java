@@ -1,5 +1,6 @@
 package com.arifian.udacity.inventoryapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -29,6 +31,7 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         qtyTextView = (TextView) findViewById(R.id.text_product_qty);
         saleEditText = (EditText) findViewById(R.id.edit_sale_number);
@@ -39,7 +42,15 @@ public class DetailActivity extends AppCompatActivity {
         receiveDecreaseButton = (ImageButton) findViewById(R.id.button_receive_decrease);
 
         builder = new AlertDialog.Builder(this);
-
+        builder.setTitle(getString(R.string.dialog_delete_title));
+        builder.setMessage(getString(R.string.dialog_delete_message));
+        builder.setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO: delete
+            }
+        });
+        builder.setNegativeButton(getString(R.string.dialog_negative), null);
 
         saleEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +157,23 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_edit, menu);
+        inflater.inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.action_edit:
+                startActivity(new Intent(this, EditActivity.class));
+                break;
+            case R.id.action_delete:
+                builder.show();
+                break;
+        }
         return true;
     }
 

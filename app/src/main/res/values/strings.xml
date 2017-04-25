@@ -16,7 +16,10 @@
 
     <string name="dialog_positive">OK</string>
     <string name="dialog_negative">Cancel</string>
-    <string name="dialog_message">Are you sure want to delete this product?</string>
+    <string name="dialog_delete_title">Delete</string>
+    <string name="dialog_discard_title">Discard</string>
+    <string name="dialog_delete_message">Are you sure want to delete this product?</string>
+    <string name="dialog_discard_message">Are you sure want to discard changes on this product?</string>
 
     <string name="order_more_message">Hello Sir. \nMay I order product named %s [quantity] more? \nPlease reply as soon as possible.\nThankyou very much.</string>
 </resources>
