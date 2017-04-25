@@ -11,4 +11,6 @@
     <dimen name="item_name_size">18sp</dimen>
     <dimen name="item_qty_size">24sp</dimen>
     <dimen name="detail_app_bar_height">300dp</dimen>
+
+    <dimen name="image_max_height">200dp</dimen>
 </resources>
