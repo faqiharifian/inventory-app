@@ -14,6 +14,7 @@ public class Product {
     byte[] imageBytes;
 
     public Product(int id, String name, String imageName, int price, int qty, byte[] imageBytes) {
+        this.id = id;
         this.name = name;
         this.imageName = imageName;
         this.price = price;
@@ -50,7 +51,7 @@ public class Product {
         String name = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_NAME));
         String imageName = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_IMAGE_NAME));
         int price = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRICE));
-        int qty = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY));;
+        int qty = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY));
         byte[] imageBytes = cursor.getBlob(cursor.getColumnIndex(ProductEntry.COLUMN_IMAGE));
         return new Product(id, name, imageName, price, qty, imageBytes);
     }

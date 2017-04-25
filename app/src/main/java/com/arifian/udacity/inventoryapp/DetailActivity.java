@@ -1,9 +1,15 @@
 package com.arifian.udacity.inventoryapp;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,21 +24,34 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DetailActivity extends AppCompatActivity {
+import com.arifian.udacity.inventoryapp.data.InventoryContract;
+import com.arifian.udacity.inventoryapp.entities.Product;
+
+public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+    private static final int PRODUCT_LOADER = 1;
     EditText saleEditText, receiveEditText;
     ImageButton saleIncreaseButton, saleDecreaseButton, receiveIncreaseButton, receiveDecreaseButton;
-    TextView qtyTextView;
+    AppBarLayout toolbarLayout;
+    TextView qtyTextView, nameTextView, priceTextView;
     AlertDialog.Builder builder;
+    Uri currentUri;
+    Product product;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        currentUri = getIntent().getData();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        toolbarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        toolbarLayout.setExpanded(false, true);
+        nameTextView = (TextView) findViewById(R.id.text_product_name);
+        priceTextView = (TextView) findViewById(R.id.text_product_price);
         qtyTextView = (TextView) findViewById(R.id.text_product_qty);
         saleEditText = (EditText) findViewById(R.id.edit_sale_number);
         saleIncreaseButton = (ImageButton) findViewById(R.id.button_sale_increase);
@@ -47,7 +66,7 @@ public class DetailActivity extends AppCompatActivity {
         builder.setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // TODO: delete
+                getContentResolver().delete(currentUri, null, null);
             }
         });
         builder.setNegativeButton(getString(R.string.dialog_negative), null);
@@ -74,7 +93,7 @@ public class DetailActivity extends AppCompatActivity {
                 if(!saleEditText.getText().toString().equals("")) {
                     if (saleEditText.getText().toString().equals("-") ||
                             (saleEditText.getText().toString().equals("0") && !qtyTextView.getText().equals("0"))) {
-                        saleEditText.setText("1");
+                        saleEditText.setText(getString(R.string.default_qty_sale));
                         saleEditText.selectAll();
                     } else if (getInteger(saleEditText) > getInteger(qtyTextView)) {
                             saleEditText.setText(qtyTextView.getText());
@@ -106,7 +125,7 @@ public class DetailActivity extends AppCompatActivity {
                 if(!receiveEditText.getText().toString().equals("")) {
                     if (receiveEditText.getText().toString().equals("-") ||
                             receiveEditText.getText().toString().equals("0")) {
-                        receiveEditText.setText("1");
+                        receiveEditText.setText(getString(R.string.default_qty_sale));
                         receiveEditText.selectAll();
                     }
                 }
@@ -117,12 +136,8 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!saleEditText.getText().toString().equals("")) {
-                    qtyTextView.setText(String.valueOf(getInteger(qtyTextView) - getInteger(saleEditText)));
-                    if (qtyTextView.getText().toString().equals("0")) {
-                        findViewById(R.id.button_product_sale).setEnabled(false);
-                        saleEditText.setText("0");
-                    }else
-                        saleEditText.setText("1");
+                    updateQty(getInteger(qtyTextView) - getInteger(saleEditText));
+                    saleEditText.setText(getString(R.string.default_qty_sale));
                 }
             }
         });
@@ -130,7 +145,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!saleEditText.getText().toString().equals("")) {
-                    qtyTextView.setText(String.valueOf(getInteger(qtyTextView) + getInteger(receiveEditText)));
+                    updateQty(getInteger(qtyTextView) + getInteger(receiveEditText));
                     findViewById(R.id.button_product_sale).setEnabled(true);
                 }
             }
@@ -142,16 +157,18 @@ public class DetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setType("text/plain");
                 intent.setData(Uri.parse("mailto:"));
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Order");
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_more_text));
                 intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.order_more_message, "Product name"));
                 try {
                     startActivity(intent);
                 } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(DetailActivity.this, "Please install a mail client first.",
+                    Toast.makeText(DetailActivity.this, getString(R.string.error_mail_client),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        getSupportLoaderManager().initLoader(PRODUCT_LOADER, null, this);
     }
 
     @Override
@@ -168,13 +185,53 @@ public class DetailActivity extends AppCompatActivity {
                 onBackPressed();
                 break;
             case R.id.action_edit:
-                startActivity(new Intent(this, EditActivity.class));
+                Intent intent = new Intent(this, EditActivity.class);
+                intent.setData(currentUri);
+                startActivity(intent);
                 break;
             case R.id.action_delete:
                 builder.show();
                 break;
         }
         return true;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this,
+                currentUri,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data.moveToFirst()) {
+            product = Product.fromCursor(data);
+            nameTextView.setText(product.getName());
+            priceTextView.setText(String.valueOf(product.getPrice()));
+            qtyTextView.setText(String.valueOf(product.getQty()));
+            if(product.getImageBytes() == null)
+                toolbarLayout.setExpanded(false, true);
+            if (product.getQty() == 0)
+                findViewById(R.id.button_product_sale).setEnabled(false);
+        }else{
+            Toast.makeText(this, getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    private void updateQty(int qty){
+        ContentValues cv = new ContentValues();
+        cv.put(InventoryContract.ProductEntry.COLUMN_QTY, qty);
+        getContentResolver().update(currentUri, cv, null, null);
     }
 
     public void increase(View view){
@@ -185,18 +242,14 @@ public class DetailActivity extends AppCompatActivity {
                         saleEditText.setText(String.valueOf(getInteger(saleEditText) + 1));
                     }
                 }else{
-                    if(qtyTextView.getText().toString().equals("0")){
-                        saleEditText.setText("0");
-                    }else{
-                        saleEditText.setText("1");
-                    }
+                    saleEditText.setText(getString(R.string.default_qty_sale));
                 }
                 break;
             case R.id.button_receive_increase:
                 if(!receiveEditText.getText().toString().equals("")) {
                     receiveEditText.setText(String.valueOf(getInteger(receiveEditText) + 1));
                 }else{
-                    receiveEditText.setText("1");
+                    receiveEditText.setText(getString(R.string.default_qty_sale));
                 }
                 break;
         }
@@ -210,11 +263,7 @@ public class DetailActivity extends AppCompatActivity {
                         saleEditText.setText(String.valueOf(getInteger(saleEditText) - 1));
                     }
                 }else{
-                    if(qtyTextView.getText().toString().equals("0")){
-                        saleEditText.setText("0");
-                    }else{
-                        saleEditText.setText("1");
-                    }
+                    saleEditText.setText(getString(R.string.default_qty_sale));
                 }
                 break;
             case R.id.button_receive_decrease:
@@ -223,7 +272,7 @@ public class DetailActivity extends AppCompatActivity {
                         receiveEditText.setText(String.valueOf(getInteger(receiveEditText) - 1));
                     }
                 }else{
-                    receiveEditText.setText("1");
+                    receiveEditText.setText(getString(R.string.default_qty_sale));
                 }
                 break;
         }
