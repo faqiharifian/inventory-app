@@ -2,6 +2,9 @@
     <string name="authority">com.arifian.udacity.inventoryapp</string>
     <string name="app_name">Inventory App</string>
 
+    <string name="title_add_product">Add Product</string>
+    <string name="title_edit_product">Edit Product</string>
+
     <string name="error_empty">No Product Found. \nPress "+" button at the right bottom corner of the screen to add product</string>
     <string name="edit_product_name">Name</string>
     <string name="edit_product_price">Price</string>

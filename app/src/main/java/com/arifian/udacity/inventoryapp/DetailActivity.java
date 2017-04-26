@@ -4,7 +4,10 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
@@ -26,6 +29,9 @@ import android.widget.Toast;
 
 import com.arifian.udacity.inventoryapp.data.InventoryContract;
 import com.arifian.udacity.inventoryapp.entities.Product;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
     private static final int PRODUCT_LOADER = 1;
@@ -215,6 +221,19 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             qtyTextView.setText(String.valueOf(product.getQty()));
             if(product.getImageBytes() == null)
                 toolbarLayout.setExpanded(false, true);
+            else{
+                toolbarLayout.setExpanded(true, true);
+                Glide.with(this)
+                        .load(product.getImageBytes())
+                        .asBitmap()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                if(Build.VERSION.SDK_INT >= 16)
+                                    toolbarLayout.setBackground(new BitmapDrawable(resource));
+                            }
+                        });
+            }
             if (product.getQty() == 0)
                 findViewById(R.id.button_product_sale).setEnabled(false);
         }else{

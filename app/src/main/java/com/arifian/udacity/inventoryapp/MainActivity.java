@@ -1,6 +1,6 @@
 package com.arifian.udacity.inventoryapp;
 
-import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -42,23 +42,50 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues cv = new ContentValues();
-                cv.put(ProductEntry.COLUMN_NAME, "Product 1");
-                cv.put(ProductEntry.COLUMN_PRICE, 10000);
-                cv.put(ProductEntry.COLUMN_QTY, 10);
-                getContentResolver().insert(ProductEntry.CONTENT_URI, cv);
-//                startActivity(new Intent(MainActivity.this, EditActivity.class));
+                startActivity(new Intent(MainActivity.this, EditActivity.class));
             }
         });
 
         getSupportLoaderManager().initLoader(PRODUCT_LOADER, null, this);
+
+//        SQLiteOpenHelper helper = new InventoryDbHelper(this);
+//        SQLiteDatabase db = helper.getReadableDatabase();
+//        Cursor cursor = db.query(ProductEntry.TABLE_NAME, new String[]{
+////                ProductEntry._ID,
+////                ProductEntry.COLUMN_NAME,
+////                ProductEntry.COLUMN_PRICE,
+////                ProductEntry.COLUMN_QTY,
+////                ProductEntry.COLUMN_IMAGE_NAME,
+//                ProductEntry.COLUMN_IMAGE
+//        }, null, null, null, null, null);
+//
+//        errorEmptyTextView.setText(String.valueOf(cursor.getCount()));
+//        if(cursor.moveToFirst()){
+//            byte[] imageBytes = cursor.getBlob(cursor.getColumnIndex(ProductEntry.COLUMN_IMAGE));
+////            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry._ID))));
+////            errorEmptyTextView.append(String.valueOf(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_NAME))));
+////            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRICE))));
+////            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY))));
+////            errorEmptyTextView.append(String.valueOf(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_IMAGE_NAME))));
+//        }
+
+
+//            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry._ID))));
+//            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry._ID))));
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(this,
                 ProductEntry.CONTENT_URI,
-                null,
+                new String[]{
+                        ProductEntry._ID,
+                ProductEntry.COLUMN_NAME,
+                ProductEntry.COLUMN_PRICE,
+                ProductEntry.COLUMN_QTY,
+                ProductEntry.COLUMN_IMAGE_NAME,
+                        ProductEntry.COLUMN_IMAGE
+                },
                 null,
                 null,
                 null);
