@@ -42,7 +42,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         cursor.moveToPosition(position);
         final Product product = Product.fromCursor(cursor);
         holder.nameTextView.setText(product.getName());
-        holder.priceTextView.setText(String.valueOf(product.getPrice()));
+        holder.priceTextView.setText(String.valueOf(product.getFormattedPrice()));
         holder.qtyTextView.setText(String.valueOf(product.getQty()));
 
         if(product.getImageBytes() != null)

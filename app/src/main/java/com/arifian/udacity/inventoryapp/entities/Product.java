@@ -4,6 +4,8 @@ import android.database.Cursor;
 
 import com.arifian.udacity.inventoryapp.data.InventoryContract.ProductEntry;
 
+import java.text.NumberFormat;
+
 /**
  * Created by faqih on 25/04/17.
  */
@@ -36,6 +38,11 @@ public class Product {
 
     public int getPrice() {
         return price;
+    }
+
+    public String getFormattedPrice() {
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+        return nf.format(price);
     }
 
     public int getQty() {

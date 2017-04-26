@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.arifian.udacity.inventoryapp.data.InventoryContract.ProductEntry;
 import com.arifian.udacity.inventoryapp.entities.Product;
+import com.arifian.udacity.inventoryapp.utils.DialogUtil;
 import com.arifian.udacity.inventoryapp.utils.FileUtil;
 import com.arifian.udacity.inventoryapp.utils.PermissionUtil;
 import com.bumptech.glide.Glide;
@@ -39,8 +40,9 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     private String[] mimeTypes = new String[]{
         "image/jpeg", "image/png", "image/jpg"
     };
-    AlertDialog.Builder builderDelete;
-    AlertDialog.Builder builderDiscard;
+    AlertDialog deleteDialog;
+    AlertDialog discardDialog;
+    AlertDialog dynamicErrorDialog;
     String nameBefore, priceBefore, qtyBefore, imageNameBefore;
     byte[] imageBytesBefore = null, imageBytes = null;
     EditText nameEditText, priceEditText, qtyEditText;
@@ -81,27 +83,45 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         priceBefore = priceEditText.getText().toString();
         qtyBefore = qtyEditText.getText().toString();
 
-        builderDelete = new AlertDialog.Builder(this);
-        builderDelete.setTitle(getString(R.string.dialog_delete_title));
-        builderDelete.setMessage(getString(R.string.dialog_delete_message));
-        builderDelete.setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getContentResolver().delete(currentUri, null, null);
-            }
-        });
-        builderDelete.setNegativeButton(getString(R.string.dialog_negative), null);
+        deleteDialog = DialogUtil.create(this,
+                getString(R.string.dialog_delete_title),
+                getString(R.string.dialog_delete_message),
+                true,
+                getString(R.string.dialog_positive),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getContentResolver().delete(currentUri, null, null);
+                    }
+                },
+                getString(R.string.dialog_negative),
+                null
+        );
 
-        builderDiscard = new AlertDialog.Builder(this);
-        builderDiscard.setTitle(getString(R.string.dialog_discard_title));
-        builderDiscard.setMessage(getString(R.string.dialog_discard_message));
-        builderDiscard.setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-        builderDiscard.setNegativeButton(getString(R.string.dialog_negative), null);
+        discardDialog = DialogUtil.create(this,
+                getString(R.string.dialog_discard_title),
+                getString(R.string.dialog_discard_message),
+                true,
+                getString(R.string.dialog_positive),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                },
+                getString(R.string.dialog_negative),
+                null
+        );
+
+        dynamicErrorDialog = DialogUtil.create(this,
+                getString(R.string.dialog_error_title),
+                "",
+                true,
+                getString(R.string.dialog_positive),
+                null,
+                null,
+                null
+        );
 
         findViewById(R.id.button_product_image).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,14 +167,21 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 onBackPressed();
                 break;
             case R.id.action_done:
-                if (currentUri == null)
-                    insertProduct();
-                else
-                    updateProduct();
-                finish();
+                boolean success = false;
+                try {
+                    if (currentUri == null)
+                        getContentResolver().insert(ProductEntry.CONTENT_URI, getCV());
+                    else
+                        getContentResolver().update(currentUri, getCV(), null, null);
+                    success = true;
+                } catch (IllegalArgumentException iae){
+                    dynamicErrorDialog.setMessage(iae.getMessage());
+                    dynamicErrorDialog.show();
+                }
+                if(success) finish();
                 break;
             case R.id.action_delete:
-                builderDelete.show();
+                deleteDialog.show();
                 break;
         }
         return true;
@@ -166,7 +193,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 && priceEditText.getText().toString().equals(priceBefore)
                 && qtyEditText.getText().toString().equals(qtyBefore)
                 && imageBytes == imageBytesBefore)){
-            builderDiscard.show();
+            discardDialog.show();
         }else{
             finish();
         }
@@ -213,14 +240,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         cv.put(ProductEntry.COLUMN_IMAGE_NAME, imageTextView.getText().toString());
         cv.put(ProductEntry.COLUMN_IMAGE, imageBytes);
         return cv;
-    }
-
-    private void insertProduct() {
-        getContentResolver().insert(ProductEntry.CONTENT_URI, getCV());
-    }
-
-    private void updateProduct() {
-        getContentResolver().update(currentUri, getCV(), null, null);
     }
 
     @Override

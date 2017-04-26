@@ -47,31 +47,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
         getSupportLoaderManager().initLoader(PRODUCT_LOADER, null, this);
-
-//        SQLiteOpenHelper helper = new InventoryDbHelper(this);
-//        SQLiteDatabase db = helper.getReadableDatabase();
-//        Cursor cursor = db.query(ProductEntry.TABLE_NAME, new String[]{
-////                ProductEntry._ID,
-////                ProductEntry.COLUMN_NAME,
-////                ProductEntry.COLUMN_PRICE,
-////                ProductEntry.COLUMN_QTY,
-////                ProductEntry.COLUMN_IMAGE_NAME,
-//                ProductEntry.COLUMN_IMAGE
-//        }, null, null, null, null, null);
-//
-//        errorEmptyTextView.setText(String.valueOf(cursor.getCount()));
-//        if(cursor.moveToFirst()){
-//            byte[] imageBytes = cursor.getBlob(cursor.getColumnIndex(ProductEntry.COLUMN_IMAGE));
-////            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry._ID))));
-////            errorEmptyTextView.append(String.valueOf(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_NAME))));
-////            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRICE))));
-////            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY))));
-////            errorEmptyTextView.append(String.valueOf(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_IMAGE_NAME))));
-//        }
-
-
-//            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry._ID))));
-//            errorEmptyTextView.append(String.valueOf(cursor.getInt(cursor.getColumnIndex(ProductEntry._ID))));
     }
 
     @Override

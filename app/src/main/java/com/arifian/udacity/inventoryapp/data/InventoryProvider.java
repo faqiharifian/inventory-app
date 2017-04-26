@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-import com.arifian.udacity.inventoryapp.data.InventoryContract.*;
+import com.arifian.udacity.inventoryapp.data.InventoryContract.ProductEntry;
 
 public class InventoryProvider extends ContentProvider {
     public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
@@ -89,17 +89,20 @@ public class InventoryProvider extends ContentProvider {
 
     private Uri insertProduct(Uri uri, ContentValues values) {
         String name = values.getAsString(ProductEntry.COLUMN_NAME);
-        if (name == null) {
+        if (name.isEmpty()) {
             throw new IllegalArgumentException("Product requires a name");
         }
 
-        Integer gender = values.getAsInteger(ProductEntry.COLUMN_PRICE);
-        if (gender == null) {
+        Integer price = values.getAsInteger(ProductEntry.COLUMN_PRICE);
+        if (price == null) {
             throw new IllegalArgumentException("Product requires a price");
+        }else if(price < 0){
+            throw new IllegalArgumentException("Product requires valid price");
         }
 
-        Integer weight = values.getAsInteger(ProductEntry.COLUMN_QTY);
-        if (weight != null && weight < 0) {
+
+        Integer quantity = values.getAsInteger(ProductEntry.COLUMN_QTY);
+        if (quantity != null && quantity < 0) {
             throw new IllegalArgumentException("Product requires valid quantity");
         }
 
@@ -135,21 +138,23 @@ public class InventoryProvider extends ContentProvider {
     private int updateInventory(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         if (values.containsKey(ProductEntry.COLUMN_NAME)) {
             String name = values.getAsString(ProductEntry.COLUMN_NAME);
-            if (name == null) {
+            if (name.isEmpty()) {
                 throw new IllegalArgumentException("Product requires a name");
             }
         }
 
         if (values.containsKey(ProductEntry.COLUMN_PRICE)) {
-            Integer gender = values.getAsInteger(ProductEntry.COLUMN_PRICE);
-            if (gender == null) {
+            Integer price = values.getAsInteger(ProductEntry.COLUMN_PRICE);
+            if (price == null) {
+                throw new IllegalArgumentException("Product requires valid price");
+            }else if(price < 0){
                 throw new IllegalArgumentException("Product requires valid price");
             }
         }
 
         if (values.containsKey(ProductEntry.COLUMN_QTY)) {
-            Integer weight = values.getAsInteger(ProductEntry.COLUMN_QTY);
-            if (weight != null && weight < 0) {
+            Integer quantity = values.getAsInteger(ProductEntry.COLUMN_QTY);
+            if (quantity != null && quantity < 0) {
                 throw new IllegalArgumentException("Product requires valid quantity");
             }
         }

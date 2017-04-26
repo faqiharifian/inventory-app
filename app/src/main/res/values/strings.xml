@@ -31,4 +31,5 @@
     <string name="default_qty_sale">1</string>
     <string name="deleted">Deleted</string>
     <string name="error_mail_client">Please install a mail client first.</string>
+    <string name="dialog_error_title">Error</string>
 </resources>

@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.arifian.udacity.inventoryapp.data.InventoryContract;
 import com.arifian.udacity.inventoryapp.entities.Product;
+import com.arifian.udacity.inventoryapp.utils.DialogUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -39,7 +40,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     ImageButton saleIncreaseButton, saleDecreaseButton, receiveIncreaseButton, receiveDecreaseButton;
     AppBarLayout toolbarLayout;
     TextView qtyTextView, nameTextView, priceTextView;
-    AlertDialog.Builder builder;
+    AlertDialog dialog;
     Uri currentUri;
     Product product;
 
@@ -66,16 +67,20 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         receiveIncreaseButton = (ImageButton) findViewById(R.id.button_receive_increase);
         receiveDecreaseButton = (ImageButton) findViewById(R.id.button_receive_decrease);
 
-        builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.dialog_delete_title));
-        builder.setMessage(getString(R.string.dialog_delete_message));
-        builder.setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getContentResolver().delete(currentUri, null, null);
-            }
-        });
-        builder.setNegativeButton(getString(R.string.dialog_negative), null);
+        dialog = DialogUtil.create(this,
+                getString(R.string.dialog_delete_title),
+                getString(R.string.dialog_delete_message),
+                true,
+                getString(R.string.dialog_positive),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getContentResolver().delete(currentUri, null, null);
+                    }
+                },
+                getString(R.string.dialog_negative),
+                null
+        );
 
         saleEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +201,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 startActivity(intent);
                 break;
             case R.id.action_delete:
-                builder.show();
+                dialog.show();
                 break;
         }
         return true;
@@ -217,7 +222,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         if(data.moveToFirst()) {
             product = Product.fromCursor(data);
             nameTextView.setText(product.getName());
-            priceTextView.setText(String.valueOf(product.getPrice()));
+            priceTextView.setText(String.valueOf(product.getFormattedPrice()));
             qtyTextView.setText(String.valueOf(product.getQty()));
             if(product.getImageBytes() == null)
                 toolbarLayout.setExpanded(false, true);
