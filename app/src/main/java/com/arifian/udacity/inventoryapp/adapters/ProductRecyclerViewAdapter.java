@@ -1,6 +1,7 @@
 package com.arifian.udacity.inventoryapp.adapters;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import com.arifian.udacity.inventoryapp.DetailActivity;
 import com.arifian.udacity.inventoryapp.R;
 import com.arifian.udacity.inventoryapp.data.InventoryContract;
 import com.arifian.udacity.inventoryapp.entities.Product;
+import com.arifian.udacity.inventoryapp.utils.DialogUtil;
 import com.bumptech.glide.Glide;
 
 /**
@@ -50,6 +53,31 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         else
             holder.productImageView.setVisibility(View.GONE);
 
+        if (product.getQty() == 0) holder.saleButton.setEnabled(false);
+        else holder.saleButton.setEnabled(true);
+
+        holder.saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Uri uri = ContentUris.withAppendedId(InventoryContract.ProductEntry.CONTENT_URI, product.getId());
+                    ContentValues cv = new ContentValues();
+                    cv.put(InventoryContract.ProductEntry.COLUMN_QTY, product.getQty() - 1);
+                    context.getContentResolver().update(uri, cv, null, null);
+                }catch (IllegalArgumentException iae){
+                    DialogUtil.create(context,
+                            context.getString(R.string.dialog_error_title),
+                            iae.getMessage(),
+                            true,
+                            context.getString(R.string.dialog_positive),
+                            null,
+                            null,
+                            null
+                    ).show();
+                }
+            }
+        });
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,15 +98,14 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     }
 
     public void swapCursor(Cursor cursor){
-        if(this.cursor != cursor) {
-            this.cursor = cursor;
-            notifyDataSetChanged();
-        }
+        this.cursor = cursor;
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView productImageView;
         TextView nameTextView, priceTextView, qtyTextView;
+        Button saleButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -86,6 +113,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             nameTextView = (TextView) itemView.findViewById(R.id.text_product_name);
             priceTextView = (TextView)itemView.findViewById(R.id.text_product_price);
             qtyTextView = (TextView)itemView.findViewById(R.id.text_product_qty);
+            saleButton = (Button) itemView.findViewById(R.id.button_product_sale);
         }
     }
 }

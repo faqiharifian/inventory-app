@@ -217,7 +217,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                             .toBytes(Bitmap.CompressFormat.JPEG, 80)
                             .atMost()
                             .fitCenter()
-                            .override(1024, 1024)
+                            .override(512, 512)
                                 .into(new SimpleTarget<byte[]>() {
                                     @Override
                                     public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {

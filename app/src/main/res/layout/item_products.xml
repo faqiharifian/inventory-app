@@ -57,5 +57,13 @@
             android:text="@string/product_left"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/button_product_sale"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:padding="@dimen/activity_margin"
+        android:text="sale"/>
 
 </LinearLayout>

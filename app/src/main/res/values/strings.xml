@@ -25,7 +25,7 @@
     <string name="dialog_delete_message">Are you sure want to delete this product?</string>
     <string name="dialog_discard_message">Are you sure want to discard changes on this product?</string>
 
-    <string name="order_more_message">Hello Sir. \nMay I order product named %s [quantity] more? \nPlease reply as soon as possible.\nThankyou very much.</string>
+    <string name="order_more_message">Hello Sir. \nMay I order product named \"%1$s\" with price of %2$s? \nPlease reply as soon as possible because I only have %3$d left here.\nThankyou very much.</string>
     <string name="product_left">left</string>
     <string name="order_more_text">Order</string>
     <string name="default_qty_sale">1</string>

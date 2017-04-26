@@ -171,6 +171,8 @@ public class InventoryProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
+        Log.e("row updated", rowsUpdated+"");
+
         return rowsUpdated;
     }
 

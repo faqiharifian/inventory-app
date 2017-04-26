@@ -169,7 +169,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 intent.setType("text/plain");
                 intent.setData(Uri.parse("mailto:"));
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_more_text));
-                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.order_more_message, "Product name"));
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.order_more_message, product.getName(), product.getFormattedPrice(), product.getQty()));
                 try {
                     startActivity(intent);
                 } catch (android.content.ActivityNotFoundException ex) {
