@@ -8,8 +8,8 @@
     <string name="error_empty">No Product Found. \nPress "+" button at the right bottom corner of the screen to add product</string>
     <string name="edit_product_name">Name</string>
     <string name="edit_product_price">Price</string>
-    <string name="edit_product_qty">Quantity</string>
-    <string name="edit_product_image">Image</string>
+    <string name="edit_product_qty">Quantity (Optional)</string>
+    <string name="edit_product_image">Image (Optional)</string>
 
     <string name="menu_done">Done</string>
     <string name="menu_delete">Delete</string>
