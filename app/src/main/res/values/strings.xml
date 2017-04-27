@@ -9,7 +9,7 @@
     <string name="edit_product_name">Name</string>
     <string name="edit_product_price">Price</string>
     <string name="edit_product_qty">Quantity (Optional)</string>
-    <string name="edit_product_image">Image (Optional)</string>
+    <string name="edit_product_image">Image</string>
 
     <string name="menu_done">Done</string>
     <string name="menu_delete">Delete</string>

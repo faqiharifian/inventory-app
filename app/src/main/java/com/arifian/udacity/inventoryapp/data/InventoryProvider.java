@@ -100,11 +100,18 @@ public class InventoryProvider extends ContentProvider {
             throw new IllegalArgumentException("Product requires valid price");
         }
 
-
         Integer quantity = values.getAsInteger(ProductEntry.COLUMN_QTY);
         if (quantity != null && quantity < 0) {
             throw new IllegalArgumentException("Product requires valid quantity");
         }
+
+        byte[] imageBytes = values.getAsByteArray(ProductEntry.COLUMN_IMAGE);
+        if (imageBytes == null) {
+            throw new IllegalArgumentException("Product requires valid image");
+        }else if(imageBytes.length == 0){
+            throw new IllegalArgumentException("Product requires valid image");
+        }
+
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -170,8 +177,6 @@ public class InventoryProvider extends ContentProvider {
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
-        Log.e("row updated", rowsUpdated+"");
 
         return rowsUpdated;
     }
